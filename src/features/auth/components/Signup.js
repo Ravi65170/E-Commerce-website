@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { increment, incrementAsync, selectCount } from "../authSlice";
+import { Link } from "react-router-dom";
 
 export default function Signup() {
   const count = useSelector(selectCount);
@@ -49,14 +50,6 @@ export default function Signup() {
                 >
                   Password
                 </label>
-                <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-semibold text-indigo-600 hover:text-indigo-500"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
               </div>
               <div className="mt-2">
                 <input
@@ -101,12 +94,12 @@ export default function Signup() {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Already a Member?
-            <a
-              href="#"
+            <Link
+              to="/login"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
-              Sign In
-            </a>
+              Log In
+            </Link>
           </p>
         </div>
       </div>
