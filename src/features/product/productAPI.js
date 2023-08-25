@@ -19,13 +19,15 @@ export function fetchAllProductsByFilters(filter, sort, pagination) {
     queryString += `${key}=${sort[key]}&`;
   }
   for (let key in pagination) {
-    queryString += `${key}=${sort[key]}&`;
+    queryString += `${key}=${pagination[key]}&`;
+    console.log("page quanri", queryString);
   }
   return new Promise(async (resolve) => {
     const response = await fetch(
       "http://localhost:3004/products?" + queryString
     );
     const data = await response.json();
-    resolve({ data });
+    const totalItems = await response.headers.get("X-Total-Count");
+    resolve({ data: { products: data, totalItems: +totalItems } });
   });
 }

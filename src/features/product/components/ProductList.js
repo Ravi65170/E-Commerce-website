@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   fetchAllProductsAsync,
   selectAllProducts,
+  selectTotalItems,
   fetchAllProductsByFiltersAsync,
 } from "../productSlice";
 
@@ -224,6 +225,7 @@ export default function ProductList() {
   // const count = useSelector(count);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const products = useSelector(selectAllProducts);
+  const totalItems = useSelector(selectTotalItems);
   const [filter, setFilter] = useState({});
   const [sort, setSort] = useState({});
   const dispatch = useDispatch();
@@ -260,6 +262,10 @@ export default function ProductList() {
     const pagination = { _page: page, _limit: ITEM_PER_PAGE };
     dispatch(fetchAllProductsByFiltersAsync({ filter, sort, pagination }));
   }, [dispatch, filter, sort, page]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [totalItems, sort]);
 
   return (
     <div className="bg-white">
@@ -364,6 +370,7 @@ export default function ProductList() {
             page={page}
             setPage={setPage}
             handlePage={handlePage}
+            totalItems={totalItems}
           ></Pagination>
         </main>
       </div>
@@ -543,7 +550,7 @@ function DesktopFilter({ handleFilter }) {
     </form>
   );
 }
-function Pagination({ handlePage, page, setPage, totalItems = 55 }) {
+function Pagination({ handlePage, page, setPage, totalItems }) {
   return (
     <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
       <div className="flex flex-1 justify-between sm:hidden">
@@ -563,12 +570,17 @@ function Pagination({ handlePage, page, setPage, totalItems = 55 }) {
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Showing
+            Showing{" "}
             <span className="font-medium">
-              {(page - 1) * ITEM_PER_PAGE + 1}
+              {(page - 1) * ITEM_PER_PAGE + 1}{" "}
             </span>
-            to <span className="font-medium">{page * ITEM_PER_PAGE}</span> of{" "}
-            <span className="font-medium">{totalItems}</span> results
+            to{" "}
+            <span className="font-medium">
+              {page * ITEM_PER_PAGE > totalItems
+                ? totalItems
+                : page * ITEM_PER_PAGE}
+            </span>{" "}
+            of <span className="font-medium">{totalItems}</span> results
           </p>
         </div>
         <div>
